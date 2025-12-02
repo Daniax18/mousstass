@@ -27,16 +27,20 @@ jobs:
         uses: snyk/actions/setup@master
 
       - name: Authenticate Snyk
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: daniax18
+        run: snyk auth $SNYK_TOKEN
 
       - name: Test for vulnerabilities
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: daniax18
         run: snyk test --file=pom.xml -d
 
       - name: Monitor project on Snyk (Dashboard)
         if: github.ref == 'refs/heads/dev'
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: daniax18
         run: snyk monitor
