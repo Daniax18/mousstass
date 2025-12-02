@@ -29,7 +29,7 @@ jobs:
       - name: Test for vulnerabilities
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk test --file=pom.xml
+        run: snyk test --file=pom.xml -d
 
       - name: Monitor project on Snyk (Dashboard)
         if: github.ref == 'refs/heads/dev'
