@@ -1,0 +1,48 @@
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven Wrapper
+        run: ./mvnw clean install -DskipTests
+
+      - name: Install Snyk CLI
+        uses: snyk/actions/setup@master
+
+      - name: Authenticate Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk auth $SNYK_TOKEN
+
+      - name: Test for vulnerabilities
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: 4bfef69d-3873-4ffc-9ed1-98e7044f21e5
+        run: snyk test --file=pom.xml --org=$SNYK_ORG
+
+      - name: Monitor project on Snyk (Dashboard)
+        if: github.ref == 'refs/heads/dev'
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: 4bfef69d-3873-4ffc-9ed1-98e7044f21e5
+        run: snyk monitor --org=$SNYK_ORG
