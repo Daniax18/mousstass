@@ -26,6 +26,10 @@ jobs:
       - name: Install Snyk CLI
         uses: snyk/actions/setup@master
 
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+
       - name: Test for vulnerabilities
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
