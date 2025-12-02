@@ -36,7 +36,7 @@ public class UserRepository {
     }
 
     public boolean insert(User u) {
-        String sql = "INSERT INTO users (firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users (firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, u.getFirstname());
             ps.setString(2, u.getLastname());
@@ -46,6 +46,7 @@ public class UserRepository {
             ps.setString(6, u.getPkPublic());
             ps.setString(7, u.getSkPrivate());
             ps.setBoolean(8, u.getMustChangePwd() != null ? u.getMustChangePwd() : Boolean.TRUE);
+            ps.setBoolean(9, u.getIsAdmin() != null ? u.getIsAdmin() : Boolean.FALSE);
             int affected = ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) u.setId(keys.getInt(1));
@@ -78,6 +79,8 @@ public class UserRepository {
         u.setSkPrivate(rs.getString("sk_private"));
         boolean must = rs.getBoolean("must_change_pwd");
         if (rs.wasNull()) u.setMustChangePwd(null); else u.setMustChangePwd(must);
+        boolean admin = rs.getBoolean("is_admin");
+        if (rs.wasNull()) u.setIsAdmin(null); else u.setIsAdmin(admin);
         Timestamp ts = rs.getTimestamp("created_at");
         if (ts != null) u.setCreatedAt(ts.toLocalDateTime());
         return u;

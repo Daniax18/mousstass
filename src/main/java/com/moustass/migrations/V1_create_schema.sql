@@ -44,3 +44,5 @@ CREATE TABLE activity_logs (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;

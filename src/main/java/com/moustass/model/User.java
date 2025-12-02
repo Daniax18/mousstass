@@ -12,12 +12,13 @@ public class User {
     private String pkPublic;
     private String skPrivate;
     private Boolean mustChangePwd;
+    private Boolean isAdmin;
     private LocalDateTime createdAt;
 
     public User() {
     }
 
-    public User(Integer id, String firstname, String lastname, String username, String passwordHash, String salt, String pkPublic, String skPrivate, Boolean mustChangePwd, LocalDateTime createdAt) {
+    public User(Integer id, String firstname, String lastname, String username, String passwordHash, String salt, String pkPublic, String skPrivate, Boolean mustChangePwd, Boolean isAdmin, LocalDateTime createdAt) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -27,6 +28,7 @@ public class User {
         this.pkPublic = pkPublic;
         this.skPrivate = skPrivate;
         this.mustChangePwd = mustChangePwd;
+        this.isAdmin = isAdmin;
         this.createdAt = createdAt;
     }
 
@@ -100,6 +102,14 @@ public class User {
 
     public void setMustChangePwd(Boolean mustChangePwd) {
         this.mustChangePwd = mustChangePwd;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public LocalDateTime getCreatedAt() {
