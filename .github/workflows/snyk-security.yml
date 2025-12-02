@@ -20,13 +20,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
       - name: Install Snyk CLI
         uses: snyk/actions/setup@master
 
       - name: Test for vulnerabilities
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk test --package-manager=maven
+        run: snyk test --file=pom.xml
 
       - name: Monitor project on Snyk (Dashboard)
         if: github.ref == 'refs/heads/dev'
