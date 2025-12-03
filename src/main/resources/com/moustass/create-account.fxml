@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moustass.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moustass.controller.CreateAccountController">
     <children>
         <Label layoutX="176.0" layoutY="46.0" text="Creer nouveau compte" textAlignment="CENTER">
             <font>
                 <Font size="22.0" />
             </font>
         </Label>
-        <Label layoutX="138.0" layoutY="121.0" text="Nom :">
+        <Label layoutX="138.0" layoutY="121.0" text="Prénom :">
             <font>
                 <Font size="21.0" />
             </font>
@@ -24,17 +24,37 @@
                 <Font size="21.0" />
             </font>
         </Label>
-        <PasswordField id="mdp1" fx:id="mdp" layoutX="226.0" layoutY="188.0" text="fffff">
+        <PasswordField id="mdp1" fx:id="password" layoutX="226.0" layoutY="188.0" text="">
             <font>
                 <Font size="14.0" />
             </font>
         </PasswordField>
-        <TextField id="new_user" fx:id="userName" layoutX="226.0" layoutY="124.0" text="Jean">
+        <TextField id="new_user" fx:id="firstname" layoutX="226.0" layoutY="124.0" text="Jean">
             <font>
                 <Font size="14.0" />
             </font>
         </TextField>
-        <Button fx:id="login" layoutX="317.0" layoutY="311.0" mnemonicParsing="false" onAction="#onClicked" text="Créer">
+        <Label layoutX="138.0" layoutY="154.0" text="Nom :">
+            <font>
+                <Font size="21.0" />
+            </font>
+        </Label>
+        <TextField fx:id="lastname" layoutX="226.0" layoutY="154.0" text="Dupont">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </TextField>
+        <Label layoutX="138.0" layoutY="214.0" text="Nom d'utilisateur :">
+            <font>
+                <Font size="21.0" />
+            </font>
+        </Label>
+        <TextField fx:id="username" layoutX="226.0" layoutY="214.0" text="jdupont">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </TextField>
+          <Button fx:id="createBtn" layoutX="317.0" layoutY="311.0" mnemonicParsing="false" onAction="#onCreate" text="Créer">
             <font>
                 <Font size="22.0" />
             </font>
@@ -44,7 +64,7 @@
             <Font size="21.0" />
          </font>
       </Label>
-      <PasswordField id="mdp2" fx:id="mdp1" layoutX="226.0" layoutY="243.0" text="fffff">
+        <PasswordField id="mdp2" fx:id="confirmPassword" layoutX="226.0" layoutY="243.0" text="">
          <font>
             <Font size="14.0" />
          </font>
