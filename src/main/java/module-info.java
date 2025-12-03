@@ -8,4 +8,5 @@ module com.moustass {
     exports com.moustass;
     exports com.moustass.config;
     opens com.moustass.config to javafx.fxml;
+    opens com.moustass.controller to javafx.fxml;
 }
