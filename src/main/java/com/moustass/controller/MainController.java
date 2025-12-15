@@ -14,6 +14,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class MainController {
     @FXML
     private TextField userName;
@@ -23,7 +25,7 @@ public class MainController {
 
     private final LoginService loginService = new LoginService();
 
-    public void onClicked(ActionEvent actionEvent) {
+    public void onClicked(ActionEvent actionEvent) throws IOException {
         String username = userName.getText();
         String password = mdp.getText();
 
@@ -59,7 +61,7 @@ public class MainController {
                 CreateAccountController ctrl = loader.getController();
                 ctrl.setPerformedBy(u.getId());
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root, 600, 400));
+                stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Créer un compte");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,14 +71,13 @@ public class MainController {
                 a.setContentText("Impossible d'ouvrir la création de compte: " + e.toString());
                 a.showAndWait();
             }
-            return;
+        }else{
+            java.net.URL fxmlUrl = getClass().getResource("/com/moustass/welcome-page.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 850, 575));
+            stage.setTitle("Home page");
         }
-
-        String role = "utilisateur";
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("Connexion réussie");
-        a.setHeaderText(null);
-        a.setContentText("Bienvenue " + u.getFirstname() + " (" + role + ")");
-        a.showAndWait();
     }
 }

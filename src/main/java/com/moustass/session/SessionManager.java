@@ -12,13 +12,6 @@ public final class SessionManager {
         currentUser = user;
     }
 
-    // A ENLEVER CETTE FONCTION APRES INTEGRATION
-    public static void setCurrentUser(int id){
-        UserRepository userRepository = new UserRepository();
-        User getCurrent = userRepository.findById(id);
-        SessionManager.login(getCurrent);
-    }
-
     public static void logout() {
         currentUser = null;
     }

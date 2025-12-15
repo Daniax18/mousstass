@@ -2,13 +2,17 @@ package com.moustass.controller;
 
 import com.moustass.model.User;
 import com.moustass.service.CreateAccountService;
+import com.moustass.session.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -63,5 +67,16 @@ public class CreateAccountController {
 
     public void setPerformedBy(Integer userId) {
         this.performedByUserId = userId;
+    }
+
+    public void rollBack(MouseEvent mouseEvent) throws IOException {
+        SessionManager.logout();
+
+        java.net.URL fxmlUrl = getClass().getResource("/com/moustass/login-view.fxml");
+        FXMLLoader loader = new FXMLLoader(fxmlUrl);
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 850, 575));
+        stage.setTitle("Moustass");
     }
 }
