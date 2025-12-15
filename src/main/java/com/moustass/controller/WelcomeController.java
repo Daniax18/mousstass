@@ -7,16 +7,23 @@ import com.moustass.view.SignatureView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
@@ -157,6 +164,7 @@ public class WelcomeController {
     private void showAlert(String msg, Alert.AlertType typeAlert) {
         Alert alert = new Alert(typeAlert);
         alert.setContentText(msg);
+        alert.setHeaderText(null);
         alert.showAndWait();
     }
 
@@ -224,4 +232,37 @@ public class WelcomeController {
         loadSignatures();
         tableSignature.setItems(signatures);
     }
+
+    public void onLogout(ActionEvent actionEvent) throws IOException {
+        boolean hasConfirmed = showConfirmDialog("Voulez vous vraiment vous déconnecter ?");
+
+        if(hasConfirmed){
+            SessionManager.logout();
+
+            java.net.URL fxmlUrl = getClass().getResource("/com/moustass/login-view.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 850, 575));
+            stage.setTitle("Moustass");
+        }
+    }
+
+    private boolean showConfirmDialog(String message) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        ButtonType btnYes = new ButtonType("Oui");
+        ButtonType btnNo = new ButtonType("Non");
+
+        alert.getButtonTypes().setAll(btnYes, btnNo);
+
+        return alert.showAndWait()
+                .filter(response -> response == btnYes)
+                .isPresent();
+    }
+
 }
