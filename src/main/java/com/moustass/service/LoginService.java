@@ -2,6 +2,7 @@ package com.moustass.service;
 
 import com.moustass.model.User;
 import com.moustass.repository.UserRepository;
+import java.nio.charset.StandardCharsets;
 
 import java.security.MessageDigest;
 
@@ -27,7 +28,7 @@ public class LoginService {
 
     private String sha256Hex(String input) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] digest = md.digest(input.getBytes("UTF-8"));
+        byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
         StringBuilder sb = new StringBuilder();
         for (byte b : digest) sb.append(String.format("%02x", b));
         return sb.toString();

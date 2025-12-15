@@ -1,8 +1,8 @@
-package com.moustass;
+package com.moustass.controller;
 
 import com.moustass.model.User;
 import com.moustass.service.LoginService;
-import com.moustass.controller.CreateAccountController;
+import com.moustass.session.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +35,8 @@ public class MainController {
             a.setContentText("Nom d'utilisateur ou mot de passe invalide.");
             a.showAndWait();
             return;
+        }else{
+            SessionManager.login(u);
         }
 
         boolean isAdmin = (u.getIsAdmin() != null && u.getIsAdmin());

@@ -2,6 +2,7 @@ package com.moustass.repository;
 
 import com.moustass.config.DatabaseConfig;
 import com.moustass.model.SignatureLog;
+import com.moustass.view.SignatureView;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -59,7 +60,31 @@ public class SignatureLogRepository {
         s.setFileName(rs.getString("file_name"));
         s.setFileHash(rs.getString("file_hash"));
         s.setSignatureValue(rs.getString("signature_value"));
-        Timestamp ts = rs.getTimestamp("created_at"); if (ts != null) s.setCreatedAt(ts.toLocalDateTime());
+        Timestamp ts = rs.getTimestamp("created_at");
+        if (ts != null) s.setCreatedAt(ts.toLocalDateTime());
         return s;
+    }
+
+    private SignatureView mapRowView(ResultSet rs) throws SQLException {
+        SignatureView s = new SignatureView();
+        s.setIdSignature(rs.getInt("id"));
+        s.setFileName(rs.getString("file_name"));
+        s.setUserName(rs.getString("username"));
+        Timestamp ts = rs.getTimestamp("created_at");
+        if (ts != null) s.setDateSignature(ts.toLocalDateTime());
+        return s;
+    }
+
+    public List<SignatureView> findAllSignatures() {
+        String sql = "select sl.id,sl.file_name, u.username, sl.created_at from signature_logs sl join users u where sl.user_id  = u.id";
+        List<SignatureView> list = new ArrayList<>();
+        try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowView(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
     }
 }

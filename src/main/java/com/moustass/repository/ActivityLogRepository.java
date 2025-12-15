@@ -41,7 +41,7 @@ public class ActivityLogRepository {
         String sql = "INSERT INTO activity_logs (user_id, action, details) VALUES (?,?,?)";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             if (a.getUserId() != null) ps.setInt(1, a.getUserId()); else ps.setNull(1, Types.INTEGER);
-            ps.setString(2, a.getAction());
+            ps.setString(2, a.getAction().name());
             ps.setString(3, a.getDetails());
             int affected = ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) { if (keys.next()) a.setId(keys.getInt(1)); }
@@ -55,7 +55,7 @@ public class ActivityLogRepository {
         ActivityLog a = new ActivityLog();
         a.setId(rs.getInt("id"));
         int uid = rs.getInt("user_id"); if (rs.wasNull()) a.setUserId(null); else a.setUserId(uid);
-        a.setAction(rs.getString("action"));
+        a.setAction(ActivityLog.TypeAction.valueOf(rs.getString("action")));
         a.setDetails(rs.getString("details"));
         Timestamp ts = rs.getTimestamp("created_at"); if (ts != null) a.setCreatedAt(ts.toLocalDateTime());
         return a;
