@@ -13,8 +13,7 @@ public class SignatureLog {
     public SignatureLog() {
     }
 
-    public SignatureLog(Integer id, Integer userId, String fileName, String fileHash, String signatureValue, LocalDateTime createdAt) {
-        this.id = id;
+    public SignatureLog(Integer userId, String fileName, String fileHash, String signatureValue, LocalDateTime createdAt) {
         this.userId = userId;
         this.fileName = fileName;
         this.fileHash = fileHash;

@@ -7,10 +7,14 @@ public class DatabaseConfig {
     public Connection databaseLink;
 
     public Connection getConnection(){
-        String databaseName= "moustass_database";
-        String databaseUser= "root";
-        String databasePassword = "06Sept2004root";
-        String url = "jdbc:mysql://localhost/"+ databaseName;
+        AppConfig config = new AppConfig();
+
+        String databaseName= config.getProperty("db.name");
+        String databaseUser= config.getProperty("db.user");
+        String databasePassword = config.getProperty("db.password");
+        String host = config.getProperty("db.host");
+
+        String url = "jdbc:mysql://" + host + "/"+ databaseName;
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
