@@ -1,6 +1,7 @@
 package com.moustass.repository;
 
 import com.moustass.config.DatabaseConfig;
+import com.moustass.exception.DatabaseConnectionException;
 import com.moustass.model.SignatureLog;
 import com.moustass.view.SignatureView;
 
@@ -12,20 +13,20 @@ public class SignatureLogRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
     public SignatureLog findById(int id) {
-        String sql = "SELECT * FROM signature_logs WHERE id = ?";
+        String sql = "SELECT id, user_id, file_name, file_hash, signature_value, created_at FROM signature_logs WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapRow(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return null;
     }
 
     public List<SignatureLog> findAllByUserId(int userId) {
-        String sql = "SELECT * FROM signature_logs WHERE user_id = ?";
+        String sql = "SELECT id, user_id, file_name, file_hash, signature_value, created_at FROM signature_logs WHERE user_id = ?";
         List<SignatureLog> list = new ArrayList<>();
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -33,7 +34,7 @@ public class SignatureLogRepository {
                 while (rs.next()) list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return list;
     }
@@ -49,7 +50,7 @@ public class SignatureLogRepository {
             try (ResultSet keys = ps.getGeneratedKeys()) { if (keys.next()) s.setId(keys.getInt(1)); }
             return affected > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
     }
 
@@ -83,7 +84,7 @@ public class SignatureLogRepository {
                 while (rs.next()) list.add(mapRowView(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return list;
     }

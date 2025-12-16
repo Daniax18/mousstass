@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class MainController {
     @FXML
@@ -25,26 +26,26 @@ public class MainController {
 
     private final LoginService loginService = new LoginService();
 
-    public void onClicked(ActionEvent actionEvent) throws IOException {
+    public void onClicked(ActionEvent actionEvent) {
         String username = userName.getText();
         String password = mdp.getText();
 
-        User u = loginService.authenticate(username, password);
-        if (u == null) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Échec de connexion");
-            a.setHeaderText(null);
-            a.setContentText("Nom d'utilisateur ou mot de passe invalide.");
-            a.showAndWait();
-            return;
-        }else{
-            SessionManager.login(u);
-        }
+        try {
+            User u = loginService.authenticate(username, password);
+            if (u == null) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Échec de connexion");
+                a.setHeaderText(null);
+                a.setContentText("Nom d'utilisateur ou mot de passe invalide.");
+                a.showAndWait();
+                return;
+            }else{
+                SessionManager.login(u);
+            }
 
-        boolean isAdmin = (u.getIsAdmin() != null && u.getIsAdmin());
-        if (isAdmin) {
-            // load create-account view with better diagnostics
-            try {
+            boolean isAdmin = (u.getIsAdmin() != null && u.getIsAdmin());
+            if (isAdmin) {
+                // load create-account view with better diagnostics
                 java.net.URL fxmlUrl = getClass().getResource("/com/moustass/create-account.fxml");
                 if (fxmlUrl == null) {
                     Alert a = new Alert(Alert.AlertType.ERROR);
@@ -52,7 +53,6 @@ public class MainController {
                     a.setHeaderText(null);
                     a.setContentText("Impossible d'ouvrir la création de compte: ressource FXML introuvable '/com/moustass/create-account.fxml'.");
                     a.showAndWait();
-                    System.err.println("FXML resource not found: /com/moustass/create-account.fxml");
                     return;
                 }
 
@@ -63,21 +63,20 @@ public class MainController {
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Créer un compte");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Alert a = new Alert(Alert.AlertType.ERROR);
-                a.setTitle("Erreur");
-                a.setHeaderText(null);
-                a.setContentText("Impossible d'ouvrir la création de compte: " + e.toString());
-                a.showAndWait();
+            } else {
+                java.net.URL fxmlUrl = getClass().getResource("/com/moustass/welcome-page.fxml");
+                FXMLLoader loader = new FXMLLoader(fxmlUrl);
+                Parent root = loader.load();
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root, 850, 575));
+                stage.setTitle("Home page");
             }
-        }else{
-            java.net.URL fxmlUrl = getClass().getResource("/com/moustass/welcome-page.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 850, 575));
-            stage.setTitle("Home page");
+        } catch (IllegalArgumentException | IOException ex){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Erreur");
+            a.setHeaderText(null);
+            a.setContentText("Erreur interne: " + ex.toString());
+            a.showAndWait();
         }
     }
 }

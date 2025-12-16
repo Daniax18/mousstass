@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+// Singleton pattern est mis en cause par Sonar, à revoir
+@SuppressWarnings("java:S6548")
 public class AppConfig {
-    // Make this class Static to avoid new instantiation every time we want data from app.properties ??
-    private Properties properties = new Properties();
+    private static AppConfig instance;
+    private final Properties properties = new Properties();
 
-    public AppConfig() {
+    private AppConfig() {
         try (InputStream is = getClass().getResourceAsStream("/com/moustass/app.properties")) {
             if (is == null) {
                 throw new FileStorageException("app.properties not found");
@@ -19,6 +21,13 @@ public class AppConfig {
         } catch (IOException e) {
             throw new FileStorageException(e.getMessage());
         }
+    }
+
+    public static AppConfig getInstance() {
+        if (instance == null) {
+            instance = new AppConfig();
+        }
+        return instance;
     }
 
     public String getProperty(String key) {

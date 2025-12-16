@@ -1,5 +1,6 @@
 package com.moustass.controller;
 
+import com.moustass.exception.FileStorageException;
 import com.moustass.model.User;
 import com.moustass.repository.UserRepository;
 import com.moustass.service.CreateAccountService;
@@ -17,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class CreateAccountController {
     @FXML
@@ -68,17 +70,11 @@ public class CreateAccountController {
             a.showAndWait();
             // clear fields
             firstname.clear(); lastname.clear(); username.clear(); password.clear(); confirmPassword.clear();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NoSuchAlgorithmException e) {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Erreur");
             a.setHeaderText(null);
             a.setContentText(e.getMessage());
-            a.showAndWait();
-        } catch (Exception e) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Erreur");
-            a.setHeaderText(null);
-            a.setContentText("Erreur interne: " + e.getMessage());
             a.showAndWait();
         }
     }
@@ -87,14 +83,23 @@ public class CreateAccountController {
         this.performedByUserId = userId;
     }
 
-    public void rollBack(MouseEvent mouseEvent) throws IOException {
+    public void rollBack(MouseEvent mouseEvent) {
         SessionManager.logout();
 
-        java.net.URL fxmlUrl = getClass().getResource("/com/moustass/login-view.fxml");
-        FXMLLoader loader = new FXMLLoader(fxmlUrl);
-        Parent root = loader.load();
-        Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 850, 575));
-        stage.setTitle("Moustass");
+        try {
+            java.net.URL fxmlUrl = getClass().getResource("/com/moustass/login-view.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 850, 575));
+            stage.setTitle("Moustass");
+        } catch (IOException ex){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Erreur");
+            a.setHeaderText(null);
+            a.setContentText(ex.getMessage());
+            a.showAndWait();
+        }
+
     }
 }

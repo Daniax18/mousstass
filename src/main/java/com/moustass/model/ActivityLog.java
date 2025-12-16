@@ -14,7 +14,9 @@ public class ActivityLog {
         LOGOUT,
         FILE_UPLOAD,
         FILE_DOWNLOAD,
-        USER_CREATED
+        USER_CREATED,
+        LOGIN_FAILURE,
+        LOGIN_SUCCESS
     }
 
     public ActivityLog() {
