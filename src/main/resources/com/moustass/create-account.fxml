@@ -4,14 +4,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moustass.controller.CreateAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moustass.controller.CreateAccountController">
     <children>
-        <Label layoutX="176.0" layoutY="46.0" text="Creer nouveau compte" textAlignment="CENTER">
+        <Label layoutX="279.0" layoutY="35.0" prefHeight="31.0" prefWidth="275.0" text="Creer nouveau compte" textAlignment="CENTER">
             <font>
-                <Font size="22.0" />
+                <Font name="System Bold" size="25.0" />
             </font>
         </Label>
         <Label layoutX="76.0" layoutY="84.0" text="Règles de mot de passe :\n• Au moins 12 caractères\n• Contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial\n• Le mot de passe ne doit jamais être visible à l'écran\n" wrapText="true" prefWidth="450.0">
@@ -19,60 +21,75 @@
                 <Font size="12.0" />
             </font>
         </Label>
-        <Label layoutX="138.0" layoutY="121.0" text="Prénom :">
+        <Label layoutX="435.0" layoutY="105.0" text="Prénom :">
             <font>
                 <Font size="21.0" />
             </font>
         </Label>
-        <Label layoutX="59.0" layoutY="184.0" text="Mot de passe :">
+        <Label layoutX="385.0" layoutY="292.0" text="Mot de passe :">
             <font>
                 <Font size="21.0" />
             </font>
         </Label>
-        <PasswordField id="mdp1" fx:id="password" layoutX="226.0" layoutY="188.0" text="">
+        <PasswordField id="mdp1" fx:id="password" layoutX="596.0" layoutY="293.0" text="">
             <font>
                 <Font size="14.0" />
             </font>
         </PasswordField>
-        <TextField id="new_user" fx:id="firstname" layoutX="226.0" layoutY="124.0" text="Jean">
+        <TextField id="new_user" fx:id="firstname" layoutX="596.0" layoutY="106.0" text="Jean">
             <font>
                 <Font size="14.0" />
             </font>
         </TextField>
-        <Label layoutX="138.0" layoutY="154.0" text="Nom :">
+        <Label layoutX="460.0" layoutY="169.0" text="Nom :">
             <font>
                 <Font size="21.0" />
             </font>
         </Label>
-        <TextField fx:id="lastname" layoutX="226.0" layoutY="154.0" text="Dupont">
+        <TextField fx:id="lastname" layoutX="596.0" layoutY="170.0" text="Dupont">
             <font>
                 <Font size="14.0" />
             </font>
         </TextField>
-        <Label layoutX="138.0" layoutY="214.0" text="Nom d'utilisateur :">
+        <Label layoutX="350.0" layoutY="227.0" text="Nom d'utilisateur :">
             <font>
                 <Font size="21.0" />
             </font>
         </Label>
-        <TextField fx:id="username" layoutX="226.0" layoutY="214.0" text="jdupont">
+        <TextField fx:id="username" layoutX="596.0" layoutY="228.0" text="jean">
             <font>
                 <Font size="14.0" />
             </font>
         </TextField>
-          <Button fx:id="createBtn" layoutX="317.0" layoutY="311.0" mnemonicParsing="false" onAction="#onCreate" text="Créer">
+          <Button fx:id="createBtn" layoutX="649.0" layoutY="434.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="36.0" prefWidth="119.0" text="Créer">
             <font>
                 <Font size="22.0" />
             </font>
         </Button>
-      <Label layoutX="91.0" layoutY="242.0" text="Confirmer :">
+      <Label layoutX="417.0" layoutY="359.0" text="Confirmer :">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-        <PasswordField id="mdp2" fx:id="confirmPassword" layoutX="226.0" layoutY="243.0" text="">
+        <PasswordField id="mdp2" fx:id="confirmPassword" layoutX="596.0" layoutY="360.0" text="">
          <font>
             <Font size="14.0" />
          </font>
       </PasswordField>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="89.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/mus.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="71.0" layoutY="293.0" prefHeight="53.0" prefWidth="208.0" text="Moustass">
+         <font>
+            <Font name="System Bold" size="41.0" />
+         </font>
+      </Label>
+      <ImageView accessibleRole="BUTTON" fitHeight="47.0" fitWidth="47.0" layoutX="43.0" layoutY="434.0" onMouseClicked="#rollBack" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/back.png" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>

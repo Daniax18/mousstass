@@ -4,50 +4,52 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane
-        maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity"
-        minWidth="-Infinity"
-        prefHeight="400.0"
-        prefWidth="600.0"
-        xmlns="http://javafx.com/javafx/25"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="com.moustass.MainController"
->
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.moustass.controller.MainController">
    <children>
-      <Label layoutX="230.0" layoutY="46.0" text="Hello world !" textAlignment="CENTER">
+      <Label layoutX="62.0" layoutY="201.0" text="Moustass Project" textAlignment="CENTER">
          <font>
-            <Font size="22.0" />
+            <Font name="System Bold" size="31.0" />
          </font>
       </Label>
-      <Label layoutX="138.0" layoutY="121.0" text="Nom :">
+      <Label layoutX="502.0" layoutY="268.0" text="Nom :">
          <font>
-            <Font size="21.0" />
+            <Font size="28.0" />
          </font>
       </Label>
-      <Label layoutX="59.0" layoutY="184.0" text="Mot de passe :">
+      <Label layoutX="397.0" layoutY="366.0" text="Mot de passe :">
          <font>
-            <Font size="21.0" />
+            <Font size="28.0" />
          </font>
       </Label>
-      <PasswordField fx:id="mdp" layoutX="226.0" layoutY="188.0" text="fffff">
+      <PasswordField fx:id="mdp" layoutX="602.0" layoutY="373.0">
          <font>
-            <Font size="14.0" />
+            <Font size="18.0" />
          </font>
       </PasswordField>
-      <TextField fx:id="userName" layoutX="226.0" layoutY="124.0" text="Jean">
+      <TextField fx:id="userName" layoutX="602.0" layoutY="271.0">
          <font>
-            <Font size="14.0" />
+            <Font size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="login" layoutX="243.0" layoutY="259.0" mnemonicParsing="false" onAction="#onClicked" text="Se connecter">
+      <Button fx:id="login" layoutX="688.0" layoutY="443.0" mnemonicParsing="false" onAction="#onClicked" prefHeight="39.0" prefWidth="138.0" text="Login">
          <font>
-            <Font size="22.0" />
+            <Font size="18.0" />
          </font>
       </Button>
+      <ImageView fitHeight="146.0" fitWidth="153.0" layoutX="114.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/mus.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="540.0" layoutY="154.0" prefHeight="46.0" prefWidth="209.0" text="Se connecter" underline="true">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

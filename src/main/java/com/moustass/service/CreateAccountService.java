@@ -70,7 +70,7 @@ public class CreateAccountService {
             // log activity
             ActivityLog a = new ActivityLog();
             a.setUserId(performedByUserId);
-            a.setAction("CREATE_USER");
+            a.setAction(ActivityLog.TypeAction.USER_CREATED);
             a.setDetails("Created user '" + username + "' (id=" + u.getId() + ")");
             a.setCreatedAt(LocalDateTime.now());
             activityLogRepository.insert(a);

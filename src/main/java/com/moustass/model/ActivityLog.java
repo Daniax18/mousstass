@@ -5,19 +5,25 @@ import java.time.LocalDateTime;
 public class ActivityLog {
     private Integer id;
     private Integer userId;
-    private String action;
+    private TypeAction action;
     private String details;
     private LocalDateTime createdAt;
+
+    public enum TypeAction{
+        LOGIN,
+        LOGOUT,
+        FILE_UPLOAD,
+        FILE_DOWNLOAD,
+        USER_CREATED
+    }
 
     public ActivityLog() {
     }
 
-    public ActivityLog(Integer id, Integer userId, String action, String details, LocalDateTime createdAt) {
-        this.id = id;
+    public ActivityLog(Integer userId, TypeAction action, String details) {
         this.userId = userId;
         this.action = action;
         this.details = details;
-        this.createdAt = createdAt;
     }
 
     public Integer getId() {
@@ -36,11 +42,11 @@ public class ActivityLog {
         this.userId = userId;
     }
 
-    public String getAction() {
+    public TypeAction getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(TypeAction action) {
         this.action = action;
     }
 
