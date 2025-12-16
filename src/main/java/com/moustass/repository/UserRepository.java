@@ -1,10 +1,10 @@
 package com.moustass.repository;
 
 import com.moustass.config.DatabaseConfig;
+import com.moustass.exception.DatabaseConnectionException;
 import com.moustass.model.User;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,25 +12,25 @@ public class UserRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
     public User findById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapRow(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return null;
     }
 
     public List<User> findAll() {
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users";
         List<User> list = new ArrayList<>();
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return list;
     }
@@ -53,7 +53,7 @@ public class UserRepository {
             }
             return affected > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
     }
 
@@ -63,19 +63,19 @@ public class UserRepository {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
     }
 
     public User findByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users WHERE username = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapRow(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return null;
     }

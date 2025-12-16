@@ -1,6 +1,7 @@
 package com.moustass.repository;
 
 import com.moustass.config.DatabaseConfig;
+import com.moustass.exception.DatabaseConnectionException;
 import com.moustass.model.UploadedFile;
 
 import java.sql.*;
@@ -11,20 +12,20 @@ public class UploadedFileRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
     public UploadedFile findById(int id) {
-        String sql = "SELECT * FROM files WHERE id = ?";
+        String sql = "SELECT id, user_id, file_name, file_hash, uploaded_at FROM files WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapRow(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return null;
     }
 
     public List<UploadedFile> findAllByUserId(int userId) {
-        String sql = "SELECT * FROM files WHERE user_id = ?";
+        String sql = "SELECT id, user_id, file_name, file_hash, uploaded_at FROM files WHERE user_id = ?";
         List<UploadedFile> list = new ArrayList<>();
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -32,7 +33,7 @@ public class UploadedFileRepository {
                 while (rs.next()) list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
         return list;
     }
@@ -47,7 +48,7 @@ public class UploadedFileRepository {
             try (ResultSet keys = ps.getGeneratedKeys()) { if (keys.next()) f.setId(keys.getInt(1)); }
             return affected > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
         }
     }
 

@@ -1,6 +1,5 @@
 package com.moustass.controller;
 
-import com.moustass.exception.FileStorageException;
 import com.moustass.service.SignatureLogService;
 import com.moustass.session.SessionManager;
 import com.moustass.view.SignatureView;
@@ -15,7 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.time.LocalDateTime;
 
 public class WelcomeController {
@@ -86,10 +87,14 @@ public class WelcomeController {
     }
 
     private void verifyFile(int idSignature) {
-        if(signatureLogService.isFileOk(idSignature)){
-            showAlert("Fichier ok !", Alert.AlertType.INFORMATION);
-        }else{
-            showAlert("Fichier corrompu !", Alert.AlertType.ERROR);
+        try {
+            if(signatureLogService.isFileOk(idSignature)){
+                showAlert("Fichier ok !", Alert.AlertType.INFORMATION);
+            }else{
+                showAlert("Fichier corrompu !", Alert.AlertType.ERROR);
+            }
+        }catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException ex){
+            showAlert("Erreur en interne ! " +ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -123,7 +128,7 @@ public class WelcomeController {
 
             showAlert("Téléchargement terminé ✔", Alert.AlertType.INFORMATION);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             showAlert("Erreur lors du téléchargement : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -156,7 +161,7 @@ public class WelcomeController {
             showAlert("file saved", Alert.AlertType.INFORMATION);
             selectedFile = null;
             nameFile.setText("");
-        }catch (FileStorageException ex){
+        }catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException ex){
             showAlert(ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -194,16 +199,12 @@ public class WelcomeController {
 
                                 btnDonwload.setOnAction(event -> {
                                     SignatureView signature = getTableView().getItems().get(getIndex());
-                                    System.out.println("Télécharger ID: " + signature.getIdSignature());
-
                                     donwloadFile(signature.getIdSignature());
                                 });
 
                                 btnVerify.setOnAction(event -> {
                                     SignatureView signature = getTableView().getItems().get(getIndex());
-                                    System.out.println("Vérifier ID: " + signature.getIdSignature());
-
-                                   verifyFile(signature.getIdSignature());
+                                    verifyFile(signature.getIdSignature());
                                 });
                             }
 
@@ -264,5 +265,4 @@ public class WelcomeController {
                 .filter(response -> response == btnYes)
                 .isPresent();
     }
-
 }

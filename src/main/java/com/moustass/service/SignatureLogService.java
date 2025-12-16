@@ -1,7 +1,9 @@
 package com.moustass.service;
 
 import com.moustass.config.AppConfig;
+import com.moustass.exception.DatabaseConnectionException;
 import com.moustass.exception.FileStorageException;
+import com.moustass.exception.SignatureRSAException;
 import com.moustass.model.ActivityLog;
 import com.moustass.model.SignatureLog;
 import com.moustass.model.User;
@@ -19,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SignatureLogService {
@@ -27,26 +31,30 @@ public class SignatureLogService {
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
     private final UserRepository userRepository = new UserRepository();
 
-    public boolean isFileOk(int idSignature){
+    private static final String UPLOAD_DIR = "upload.dir";
+
+    public boolean isFileOk(int idSignature)
+            throws IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
         try {
-           SignatureLog signature = signatureLogRepository.findById(idSignature);
-           User author = userRepository.findById(signature.getUserId());
+            SignatureLog signature = signatureLogRepository.findById(idSignature);
+            User author = userRepository.findById(signature.getUserId());
             PublicKey pk = CryptoUtils.publicKeyFromBase64(author.getPkPublic());
 
-            AppConfig config = new AppConfig();
-            File fileToVerify = new File(config.getProperty("upload.dir") + signature.getFileName());
+            AppConfig config = AppConfig.getInstance();
+            File fileToVerify = new File(config.getProperty(UPLOAD_DIR) + signature.getFileName());
 
             return CryptoUtils.verifySha256WithRsa(
                     Files.readAllBytes(fileToVerify.toPath()),
                     CryptoUtils.fromB64(signature.getSignatureValue()),
                     pk
             );
-        } catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException | InvalidKeySpecException e) {
+            throw new SignatureRSAException("Error : " + e.getMessage());
         }
     }
 
-    public void saveFile(File fileToSave){
+    public void saveFile(File fileToSave)
+            throws IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException{
         try {
             savePhysicalFile(fileToSave);
             User currentUser = SessionManager.getCurrentUser();
@@ -76,33 +84,31 @@ public class SignatureLogService {
 
             // NON TRANSACTIONEL FUNCTION !!!!!
             // Use Connection => auto commit false
-        } catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | NoSuchAlgorithmException | SignatureException | InvalidKeyException | InvalidKeySpecException e) {
+            throw new SignatureRSAException("Error : " +e.getMessage());
+        }catch (SQLException ex){
+            throw new DatabaseConnectionException("Error Db: " +ex.getMessage());
         }
     }
 
     public void savePhysicalFile(File fileToSave){
         try {
-            AppConfig config = new AppConfig();
-            String savePath = config.getProperty("upload.dir");
+            AppConfig config = AppConfig.getInstance();
+            String savePath = config.getProperty(UPLOAD_DIR);
             Files.createDirectories(Path.of(savePath));
 
             Path destination = Paths.get(savePath + fileToSave.getName());
 
             Files.copy(fileToSave.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
-        }catch (FileStorageException | IOException ex){
+        }catch (IOException ex){
             throw new FileStorageException("Error: " +ex.getMessage());
         }
     }
 
     public File fileToDownload(int idSignature){
-        try {
-            SignatureLog signature = signatureLogRepository.findById(idSignature);
-            AppConfig config = new AppConfig();
-            return new File(config.getProperty("upload.dir") + signature.getFileName());
-        }catch (Exception ex){
-            throw new RuntimeException(ex);
-        }
+        SignatureLog signature = signatureLogRepository.findById(idSignature);
+        AppConfig config = AppConfig.getInstance();
+        return new File(config.getProperty(UPLOAD_DIR) + signature.getFileName());
     }
 
     public List<SignatureView> findAllSignatures(){
