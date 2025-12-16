@@ -21,7 +21,7 @@ public class InitialData {
                 return;
             }
 
-            String plainPassword = "Admin@123";
+            String plainPassword = AppConfig.getInstance().getProperty("admin.mdp");
 
             // generate salt
             String salt = CryptoUtils.generateSalt(16);
