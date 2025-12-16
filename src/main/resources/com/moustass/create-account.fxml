@@ -14,6 +14,11 @@
                 <Font size="22.0" />
             </font>
         </Label>
+        <Label layoutX="76.0" layoutY="84.0" text="Règles de mot de passe :\n• Au moins 12 caractères\n• Contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial\n• Le mot de passe ne doit jamais être visible à l'écran\n" wrapText="true" prefWidth="450.0">
+            <font>
+                <Font size="12.0" />
+            </font>
+        </Label>
         <Label layoutX="138.0" layoutY="121.0" text="Prénom :">
             <font>
                 <Font size="21.0" />

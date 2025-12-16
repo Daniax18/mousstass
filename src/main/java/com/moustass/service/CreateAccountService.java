@@ -20,7 +20,7 @@ public class CreateAccountService {
     private final UserRepository userRepository = new UserRepository();
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
 
-    public User createAccount(String firstname, String lastname, String username, String password, String confirmPassword, Integer performedByUserId) {
+    public User createAccount(String firstname, String lastname, String username, String password, String confirmPassword, Integer performedByUserId, boolean adminVerified) {
         if (firstname == null) firstname = "";
         if (lastname == null) lastname = "";
         if (username == null || username.trim().isEmpty()) throw new IllegalArgumentException("username required");
@@ -29,6 +29,17 @@ public class CreateAccountService {
         try {
             // ensure username not already used
             if (userRepository.findByUsername(username) != null) throw new IllegalArgumentException("username already exists");
+
+            // if the creator is an admin, require adminVerified == true
+            if (performedByUserId != null) {
+                com.moustass.model.User performer = userRepository.findById(performedByUserId);
+                if (performer != null && Boolean.TRUE.equals(performer.getIsAdmin()) && !adminVerified) {
+                    throw new IllegalArgumentException("DOUBLE_VERIFICATION_REQUIRED: Admin must confirm creation");
+                }
+            }
+
+            // validate password rules
+            validatePasswordRules(password);
 
             // generate salt
             String salt = generateSalt(16);
@@ -76,6 +87,20 @@ public class CreateAccountService {
         byte[] b = new byte[length];
         new SecureRandom().nextBytes(b);
         return Base64.getEncoder().encodeToString(b);
+    }
+
+    public void validatePasswordRules(String password) {
+        StringBuilder errors = new StringBuilder();
+        if (password == null) {
+            errors.append("Password required. ");
+        } else {
+            if (password.length() < 12) errors.append("Le mot de passe doit contenir au moins 12 caractères. ");
+            if (!password.matches(".*[A-Z].*")) errors.append("Au moins une majuscule requise. ");
+            if (!password.matches(".*[a-z].*")) errors.append("Au moins une minuscule requise. ");
+            if (!password.matches(".*[0-9].*")) errors.append("Au moins un chiffre requis. ");
+            if (!password.matches(".*[^A-Za-z0-9].*")) errors.append("Au moins un caractère spécial requis. ");
+        }
+        if (errors.length() > 0) throw new IllegalArgumentException(errors.toString().trim());
     }
 
     private KeyPair generateKeyPair() throws Exception {
