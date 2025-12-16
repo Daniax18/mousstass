@@ -12,3 +12,4 @@ target/
 /out/
 /bin/
 /build/
+src/main/resources/data/*
