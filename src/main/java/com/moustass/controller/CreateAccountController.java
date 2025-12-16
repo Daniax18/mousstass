@@ -1,6 +1,7 @@
 package com.moustass.controller;
 
 import com.moustass.model.User;
+import com.moustass.repository.UserRepository;
 import com.moustass.service.CreateAccountService;
 import com.moustass.session.SessionManager;
 import javafx.fxml.FXML;
@@ -42,7 +43,24 @@ public class CreateAccountController {
     @FXML
     protected void onCreate() {
         try {
-            User u = service.createAccount(firstname.getText(), lastname.getText(), username.getText(), password.getText(), confirmPassword.getText(), performedByUserId);
+            boolean adminVerified = false;
+            if (performedByUserId != null) {
+                User performer = new UserRepository().findById(performedByUserId);
+                if (performer != null && Boolean.TRUE.equals(performer.getIsAdmin())) {
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Double vérification requise");
+                    confirm.setHeaderText(null);
+                    confirm.setContentText("Vous créez un compte en tant qu'Admin. Confirmer la création ?");
+                    java.util.Optional<javafx.scene.control.ButtonType> res = confirm.showAndWait();
+                    if (res.isPresent() && res.get() == javafx.scene.control.ButtonType.OK) {
+                        adminVerified = true;
+                    } else {
+                        return; // abort creation
+                    }
+                }
+            }
+
+            User u = service.createAccount(firstname.getText(), lastname.getText(), username.getText(), password.getText(), confirmPassword.getText(), performedByUserId, adminVerified);
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Compte créé");
             a.setHeaderText(null);
