@@ -3,16 +3,22 @@ package com.moustass.service;
 import com.moustass.exception.DatabaseConnectionException;
 import com.moustass.exception.SignatureRSAException;
 import com.moustass.model.ActivityLog;
+import com.moustass.model.AuthEvent;
+import com.moustass.model.AuthLog;
+import com.moustass.repository.AuthLogRepository;
+import com.moustass.utils.CryptoUtils;
 import com.moustass.model.User;
 import com.moustass.repository.ActivityLogRepository;
 import com.moustass.repository.UserRepository;
-import com.moustass.utils.CryptoUtils;
+import com.moustass.utils.ValidatorUtils;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class LoginService {
     private final UserRepository userRepository = new UserRepository();
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
+    private final AuthLogRepository authLogRepository = new AuthLogRepository();
 
     public User authenticate(String username, String password) {
         try {
@@ -49,6 +55,41 @@ public class LoginService {
             throw new IllegalArgumentException("Authentication error: " + e.getMessage(), e);
         } catch (NoSuchAlgorithmException e){
             throw new SignatureRSAException("Erreur RSA: " + e.getMessage());
+        }
+    }
+
+    public void changePasswordFirstLogin(Integer userId, String newPassword) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User id is required");
+        }
+
+        if (newPassword == null || newPassword.length() < 12) {
+            throw new IllegalArgumentException("Password is weak");
+        }
+        User u = userRepository.findById(userId);
+        if (u == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        if (!Boolean.TRUE.equals(u.getMustChangePwd())) {
+            throw new IllegalArgumentException("Password change not required");
+        }
+        ValidatorUtils.validatePasswordRules(newPassword);
+
+        try {
+            String salt = CryptoUtils.generateSalt(16);
+            String hashPassword = CryptoUtils.hashPassword(salt, newPassword,u.getPkPublic(),u.getSkPrivate());
+            u.setSalt(salt);
+            u.setPasswordHash(hashPassword);
+            u.setMustChangePwd(Boolean.FALSE);
+            userRepository.updatePassword(u);
+            AuthLog log = new AuthLog();
+            log.setUserId(userId);
+            log.setEvent(AuthEvent.SUCCESS);
+            authLogRepository.insert(log);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error: " + e.getMessage());
+        } catch (SQLException ex){
+            throw new DatabaseConnectionException("Error db: " + ex.getMessage());
         }
     }
 }

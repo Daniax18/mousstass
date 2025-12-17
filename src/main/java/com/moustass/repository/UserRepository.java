@@ -98,4 +98,21 @@ public class UserRepository {
         if (ts != null) u.setCreatedAt(ts.toLocalDateTime());
         return u;
     }
+
+    public boolean updatePassword(User u) throws SQLException{
+        if (u == null || u.getId() == null) {
+            throw new IllegalArgumentException("User and user id required");
+        }
+        String sql = "UPDATE users SET password_hash = ?,salt = ?,must_change_pwd = ? WHERE id = ?";
+        try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, u.getPasswordHash());
+            ps.setString(2, u.getSalt());
+            ps.setBoolean(3, u.getMustChangePwd());
+            ps.setInt(4, u.getId());
+
+            return ps.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DatabaseConnectionException("Error db : " + e.getMessage());
+        }
+    }
 }

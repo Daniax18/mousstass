@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class MainController {
     @FXML
@@ -43,6 +42,22 @@ public class MainController {
                 SessionManager.login(u);
             }
 
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            if (Boolean.TRUE.equals(u.getMustChangePwd())) {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/moustass/first-login.fxml")
+                );
+                Parent root = loader.load();
+
+                FirstLoginController ctrl = loader.getController();
+                ctrl.setUserId(u.getId());
+
+                stage.setScene(new Scene(root, 850, 575));
+                stage.setTitle("First login - Change password");
+                return;
+            }
+
             boolean isAdmin = (u.getIsAdmin() != null && u.getIsAdmin());
             if (isAdmin) {
                 // load create-account view with better diagnostics
@@ -60,14 +75,14 @@ public class MainController {
                 Parent root = loader.load();
                 CreateAccountController ctrl = loader.getController();
                 ctrl.setPerformedBy(u.getId());
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Créer un compte");
             } else {
                 java.net.URL fxmlUrl = getClass().getResource("/com/moustass/welcome-page.fxml");
                 FXMLLoader loader = new FXMLLoader(fxmlUrl);
                 Parent root = loader.load();
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Home page");
             }
