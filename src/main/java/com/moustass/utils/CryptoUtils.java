@@ -18,7 +18,6 @@ public final class CryptoUtils {
 
     private static final String SHA_256_ALG = "SHA-256";
     private static final String SHA_256_WITH_RSA_ALG = "SHA256withRSA";
-    private static final String SHA_ALG = "SHA";
 
     public static byte[] sha256(File file) throws IOException, NoSuchAlgorithmException {
         try {
@@ -74,7 +73,7 @@ public final class CryptoUtils {
             byte[] keyBytes = Base64.getDecoder().decode(privateKeyStr);
 
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance(SHA_ALG);
+            KeyFactory keyFactory = KeyFactory.getInstance("SHA");
 
             return keyFactory.generatePrivate(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -88,7 +87,7 @@ public final class CryptoUtils {
             byte[] keyBytes = Base64.getDecoder().decode(publicKeyStr);
 
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance(SHA_ALG);
+            KeyFactory keyFactory = KeyFactory.getInstance("SHA");
 
             return keyFactory.generatePublic(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -126,7 +125,7 @@ public final class CryptoUtils {
 
     public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance(SHA_ALG);
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("SHA");
             kpg.initialize(2048);
             return kpg.generateKeyPair();
         }catch (NoSuchAlgorithmException ex){
