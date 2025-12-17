@@ -131,4 +131,25 @@ public final class CryptoUtils {
         }
     }
 
+    public static String hashPassword(
+            String salt,
+            String password,
+            String pk,
+            String sk
+    ) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String input = salt + password + pk + sk;
+            byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) sb.append(String.format("%02x", b));
+            return sb.toString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Password hashing failed", e);
+        }
+    }
+
+
 }

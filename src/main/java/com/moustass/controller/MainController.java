@@ -42,6 +42,23 @@ public class MainController {
             }else{
                 SessionManager.login(u);
             }
+            SessionManager.login(u);
+
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            if (Boolean.TRUE.equals(u.getMustChangePwd())) {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/moustass/first-login.fxml")
+                );
+                Parent root = loader.load();
+
+                FirstLoginController ctrl = loader.getController();
+                ctrl.setUserId(u.getId());
+
+                stage.setScene(new Scene(root, 850, 575));
+                stage.setTitle("First login - Change password");
+                return;
+            }
 
             boolean isAdmin = (u.getIsAdmin() != null && u.getIsAdmin());
             if (isAdmin) {
@@ -60,14 +77,14 @@ public class MainController {
                 Parent root = loader.load();
                 CreateAccountController ctrl = loader.getController();
                 ctrl.setPerformedBy(u.getId());
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Créer un compte");
             } else {
                 java.net.URL fxmlUrl = getClass().getResource("/com/moustass/welcome-page.fxml");
                 FXMLLoader loader = new FXMLLoader(fxmlUrl);
                 Parent root = loader.load();
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 850, 575));
                 stage.setTitle("Home page");
             }
