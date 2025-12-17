@@ -2,6 +2,15 @@ package com.moustass.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a digital signature entry.
+ * <p>
+ * This class stores information related to file signing operations,
+ * including the file hash and its associated digital signature,
+ * in order to ensure integrity and traceability.
+ * </p>
+ */
+
 public class SignatureLog {
     private Integer id;
     private Integer userId;
@@ -12,6 +21,16 @@ public class SignatureLog {
 
     public SignatureLog() {
     }
+
+    /**
+     * Creates a new signature log entry.
+     *
+     * @param userId         the identifier of the user who signed the file
+     * @param fileName       the name of the signed file
+     * @param fileHash       the cryptographic hash of the file
+     * @param signatureValue the digital signature associated with the file
+     * @param createdAt      the date and time of the signing operation
+     */
 
     public SignatureLog(Integer userId, String fileName, String fileHash, String signatureValue, LocalDateTime createdAt) {
         this.userId = userId;

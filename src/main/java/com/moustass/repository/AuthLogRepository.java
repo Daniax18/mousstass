@@ -9,9 +9,24 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository responsible for managing {@link AuthLog} persistence.
+ * <p>
+ * This class provides database access methods for storing and retrieving
+ * authentication log entries, enabling security auditing and monitoring
+ * of authentication events.
+ * </p>
+ */
+
 public class AuthLogRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
+    /**
+     * Retrieves an authentication log entry by its identifier.
+     *
+     * @param id the identifier of the authentication log entry
+     * @return the corresponding {@link AuthLog}, or {@code null} if not found
+     */
     public AuthLog findById(int id) {
         String sql = "SELECT id, user_id, event, id_address, created_at FROM auth_logs WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -25,6 +40,11 @@ public class AuthLogRepository {
         return null;
     }
 
+    /**
+     * Retrieves all authentication log entries.
+     *
+     * @return a list of all {@link AuthLog} records
+     */
     public List<AuthLog> findAll() {
         String sql = "SELECT id, user_id, event, id_address, created_at FROM auth_logs";
         List<AuthLog> list = new ArrayList<>();
@@ -36,6 +56,12 @@ public class AuthLogRepository {
         return list;
     }
 
+    /**
+     * Inserts a new authentication log entry into the database.
+     *
+     * @param a the authentication log entry to persist
+     * @return {@code true} if the insertion was successful, {@code false} otherwise
+     */
     public boolean insert(AuthLog a) {
         String sql = "INSERT INTO auth_logs (user_id, event, ip_address) VALUES (?,?,?)";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -50,6 +76,13 @@ public class AuthLogRepository {
         }
     }
 
+    /**
+     * Maps a database result set row to an {@link AuthLog} object.
+     *
+     * @param rs the {@link ResultSet} positioned at the current row
+     * @return the mapped {@link AuthLog} instance
+     * @throws SQLException if a result set access error occurs
+     */
     private AuthLog mapRow(ResultSet rs) throws SQLException {
         AuthLog a = new AuthLog();
         a.setId(rs.getInt("id"));

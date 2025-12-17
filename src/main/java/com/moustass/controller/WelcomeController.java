@@ -29,6 +29,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.time.LocalDateTime;
 
+/**
+ * JavaFX controller responsible for Home page.
+ */
 public class WelcomeController {
     @FXML
     public Label userConnected;

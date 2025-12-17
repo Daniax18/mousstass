@@ -19,6 +19,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * JavaFX controller responsible for user account creation.
+ */
 public class CreateAccountController {
     @FXML
     private TextField firstname;

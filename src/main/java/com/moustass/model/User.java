@@ -2,6 +2,14 @@ package com.moustass.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents an application user.
+ * <p>
+ * This class stores identity, authentication, and cryptographic
+ * information associated with a user account.
+ * </p>
+ */
+
 public class User {
     private Integer id;
     private String firstname;
@@ -17,6 +25,22 @@ public class User {
 
     public User() {
     }
+
+    /**
+     * Creates a new user instance.
+     *
+     * @param id            the unique identifier of the user
+     * @param firstname     the first name of the user
+     * @param lastname      the last name of the user
+     * @param username      the unique username
+     * @param passwordHash  the hashed password
+     * @param salt          the cryptographic salt
+     * @param pkPublic      the public RSA key
+     * @param skPrivate     the private RSA key
+     * @param mustChangePwd indicates whether the password must be changed
+     * @param isAdmin       indicates whether the user has administrative rights
+     * @param createdAt     the account creation date and time
+     */
 
     public User(Integer id, String firstname, String lastname, String username, String passwordHash, String salt, String pkPublic, String skPrivate, Boolean mustChangePwd, Boolean isAdmin, LocalDateTime createdAt) {
         this.id = id;

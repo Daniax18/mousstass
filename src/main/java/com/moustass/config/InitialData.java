@@ -8,10 +8,30 @@ import com.moustass.utils.CryptoUtils;
 import java.security.*;
 import java.time.LocalDateTime;
 
+/**
+ * Application initial data loader.
+ * <p>
+ * This class is responsible for initializing mandatory system data
+ * at application startup, such as the default administrator account (if not exist).
+ * </p>
+ */
 public class InitialData {
     private static final UserRepository userRepository = new UserRepository();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private InitialData(){}
+
+    /**
+     * Initializes the default administrator account.
+     * <p>
+     * If an administrator with the predefined username already exists,
+     * the method exits without performing any operation.
+     * </p>
+     * @throws InitializeDataException if a cryptographic error occurs
+     *                                 during initialization
+     */
     public static void initDefaultAdmin() {
         try {
             String adminUsername = "admin";

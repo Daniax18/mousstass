@@ -2,6 +2,13 @@ package com.moustass.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents an activity log entry.
+ * <p>
+ * This class is used to record user actions within the application
+ * in order to ensure traceability, auditing, and security monitoring.
+ * </p>
+ */
 public class ActivityLog {
     private Integer id;
     private Integer userId;
@@ -9,6 +16,13 @@ public class ActivityLog {
     private String details;
     private LocalDateTime createdAt;
 
+    /**
+     * Enumeration of possible user actions recorded in the activity log.
+     * <p>
+     * This enum defines all actions that can be audited within the system,
+     * such as authentication events and file operations.
+     * </p>
+     */
     public enum TypeAction{
         LOGIN,
         LOGOUT,
@@ -21,6 +35,14 @@ public class ActivityLog {
 
     public ActivityLog() {
     }
+
+    /**
+     * Creates a new activity log entry.
+     *
+     * @param userId  the identifier of the user who performed the action
+     * @param action  the type of action performed
+     * @param details additional information describing the action
+     */
 
     public ActivityLog(Integer userId, TypeAction action, String details) {
         this.userId = userId;
