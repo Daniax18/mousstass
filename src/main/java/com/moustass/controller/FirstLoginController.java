@@ -31,17 +31,25 @@ public class FirstLoginController {
         if (userId == null) {
             throw new IllegalArgumentException("User not found");
         }
-        String newPassword = this.newPassword.getText();
-        String confirmPassword = this.confirmPassword.getText();
+        String newPass = this.newPassword.getText();
+        String confirmPass = this.confirmPassword.getText();
 
-        if (newPassword == null || newPassword.isBlank()) {
-            throw new IllegalArgumentException("Password required");
+        if (newPass == null || newPass.isBlank()) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setHeaderText(null);
+            a.setContentText("Password required");
+            a.showAndWait();
+            return;
         }
-        if (!newPassword.equals(confirmPassword)) {
-            throw new IllegalArgumentException("Password not the same");
+        if (!newPass.equals(confirmPass)) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setHeaderText(null);
+            a.setContentText("Password not the same");
+            a.showAndWait();
+            return;
         }
         try {
-            loginService.changePasswordFirstLogin(userId, newPassword);
+            loginService.changePasswordFirstLogin(userId, newPass);
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setHeaderText(null);
             a.setContentText("Password changed, login again");
@@ -53,7 +61,6 @@ public class FirstLoginController {
             a.setContentText(e.getMessage());
             a.showAndWait();
         }
-
     }
 
     private void goToLogin(ActionEvent actionEvent) throws IOException {
@@ -62,7 +69,7 @@ public class FirstLoginController {
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 850, 575));
-        stage.setTitle("Home page");
+        stage.setTitle("Moustass");
     }
 
 }

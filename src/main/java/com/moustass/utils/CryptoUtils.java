@@ -16,9 +16,13 @@ import java.util.Base64;
 public final class CryptoUtils {
     private CryptoUtils() {}
 
+    private static final String SHA_256_ALG = "SHA-256";
+    private static final String SHA_256_WITH_RSA_ALG = "SHA256withRSA";
+    private static final String SHA_ALG = "SHA";
+
     public static byte[] sha256(File file) throws IOException, NoSuchAlgorithmException {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(SHA_256_ALG);
             try (InputStream in = Files.newInputStream(file.toPath())) {
                 byte[] buffer = new byte[8192];
                 int read;
@@ -35,7 +39,7 @@ public final class CryptoUtils {
     public static byte[] signSha256WithRsa(byte[] data, PrivateKey privateKey)
             throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         try {
-            Signature sig = Signature.getInstance("SHA256withRSA");
+            Signature sig = Signature.getInstance(SHA_256_WITH_RSA_ALG);
             sig.initSign(privateKey);
             sig.update(data);
             return sig.sign();
@@ -47,7 +51,7 @@ public final class CryptoUtils {
     public static boolean verifySha256WithRsa(byte[] data, byte[] signature, PublicKey publicKey)
             throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         try {
-            Signature sig = Signature.getInstance("SHA256withRSA");
+            Signature sig = Signature.getInstance(SHA_256_WITH_RSA_ALG);
             sig.initVerify(publicKey);
             sig.update(data);
             return sig.verify(signature);
@@ -70,7 +74,7 @@ public final class CryptoUtils {
             byte[] keyBytes = Base64.getDecoder().decode(privateKeyStr);
 
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(SHA_ALG);
 
             return keyFactory.generatePrivate(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -84,7 +88,7 @@ public final class CryptoUtils {
             byte[] keyBytes = Base64.getDecoder().decode(publicKeyStr);
 
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(SHA_ALG);
 
             return keyFactory.generatePublic(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -94,7 +98,7 @@ public final class CryptoUtils {
 
     public static String sha256Hex(String input) throws NoSuchAlgorithmException {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(SHA_256_ALG);
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
             for (byte b : digest) sb.append(String.format("%02x", b));
@@ -102,7 +106,6 @@ public final class CryptoUtils {
         } catch (NoSuchAlgorithmException ex){
             throw new SignatureRSAException("Error RSA : " + ex.getMessage());
         }
-
     }
 
     public static String encodePublicKey(PublicKey pk) {
@@ -123,7 +126,7 @@ public final class CryptoUtils {
 
     public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance(SHA_ALG);
             kpg.initialize(2048);
             return kpg.generateKeyPair();
         }catch (NoSuchAlgorithmException ex){
@@ -138,7 +141,7 @@ public final class CryptoUtils {
             String sk
     ) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(SHA_256_ALG);
             String input = salt + password + pk + sk;
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
 
@@ -146,8 +149,8 @@ public final class CryptoUtils {
             for (byte b : digest) sb.append(String.format("%02x", b));
             return sb.toString();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Password hashing failed", e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new SignatureRSAException("Error RSA: ");
         }
     }
 

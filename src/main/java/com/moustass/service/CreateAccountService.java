@@ -86,22 +86,11 @@ public class CreateAccountService {
         if (password == null) {
             errors.append("Password required. ");
         } else {
-            boolean hasUpper = false;
-            boolean hasLower = false;
-            boolean hasDigit = false;
-            boolean hasSpecial = false;
-
-            for (char c : password.toCharArray()) {
-                if (Character.isUpperCase(c)) hasUpper = true;
-                else if (Character.isLowerCase(c)) hasLower = true;
-                else if (Character.isDigit(c)) hasDigit = true;
-                else hasSpecial = true;
-            }
-
-            if (!hasUpper) errors.append("Au moins une majuscule requise. ");
-            if (!hasLower) errors.append("Au moins une minuscule requise. ");
-            if (!hasDigit) errors.append("Au moins un chiffre requis. ");
-            if (!hasSpecial) errors.append("Au moins un caractère spécial requis. ");
+            if (password.length() < 12) errors.append("Le mot de passe doit contenir au moins 12 caractères. ");
+            if (!password.matches(".*[A-Z].*")) errors.append("Au moins une majuscule requise. ");
+            if (!password.matches(".*[a-z].*")) errors.append("Au moins une minuscule requise. ");
+            if (!password.matches(".*\\d.*")) errors.append("Au moins un chiffre requis. ");
+            if (!password.matches(".*[^A-Za-z0-9].*")) errors.append("Au moins un caractère spécial requis. ");
         }
         if (!errors.isEmpty()) throw new IllegalArgumentException(errors.toString().trim());
     }
