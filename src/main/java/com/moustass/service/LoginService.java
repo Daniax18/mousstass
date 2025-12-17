@@ -10,6 +10,8 @@ import com.moustass.utils.CryptoUtils;
 import com.moustass.model.User;
 import com.moustass.repository.ActivityLogRepository;
 import com.moustass.repository.UserRepository;
+import com.moustass.utils.ValidatorUtils;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
@@ -56,20 +58,6 @@ public class LoginService {
         }
     }
 
-    public void validatePasswordRules(String password) {
-        StringBuilder errors = new StringBuilder();
-        if (password == null) {
-            errors.append("Password required. ");
-        } else {
-            if (password.length() < 12) errors.append("Le mot de passe doit contenir au moins 12 caractères. ");
-            if (!password.matches(".*[A-Z].*")) errors.append("Au moins une majuscule requise. ");
-            if (!password.matches(".*[a-z].*")) errors.append("Au moins une minuscule requise. ");
-            if (!password.matches(".*\\d.*")) errors.append("Au moins un chiffre requis. ");
-            if (!password.matches(".*[^A-Za-z0-9].*")) errors.append("Au moins un caractère spécial requis. ");
-        }
-        if (!errors.isEmpty()) throw new IllegalArgumentException(errors.toString().trim());
-    }
-
     public void changePasswordFirstLogin(Integer userId, String newPassword) {
         if (userId == null) {
             throw new IllegalArgumentException("User id is required");
@@ -85,7 +73,7 @@ public class LoginService {
         if (!Boolean.TRUE.equals(u.getMustChangePwd())) {
             throw new IllegalArgumentException("Password change not required");
         }
-        validatePasswordRules(newPassword);
+        ValidatorUtils.validatePasswordRules(newPassword);
 
         try {
             String salt = CryptoUtils.generateSalt(16);

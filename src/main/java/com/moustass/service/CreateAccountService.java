@@ -7,6 +7,8 @@ import com.moustass.model.ActivityLog;
 import com.moustass.repository.UserRepository;
 import com.moustass.repository.ActivityLogRepository;
 import com.moustass.utils.CryptoUtils;
+import com.moustass.utils.ValidatorUtils;
+
 import java.security.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -35,7 +37,7 @@ public class CreateAccountService {
             }
 
             // validate password rules
-            validatePasswordRules(password);
+            ValidatorUtils.validatePasswordRules(password);
 
             // generate salt
             String salt = CryptoUtils.generateSalt(16);
@@ -79,19 +81,5 @@ public class CreateAccountService {
         }catch (SQLException ex){
             throw new DatabaseConnectionException("Error DB : " + ex.getMessage());
         }
-    }
-
-    public void validatePasswordRules(String password) throws IllegalArgumentException{
-        StringBuilder errors = new StringBuilder();
-        if (password == null) {
-            errors.append("Password required. ");
-        } else {
-            if (password.length() < 12) errors.append("Le mot de passe doit contenir au moins 12 caractères. ");
-            if (!password.matches(".*[A-Z].*")) errors.append("Au moins une majuscule requise. ");
-            if (!password.matches(".*[a-z].*")) errors.append("Au moins une minuscule requise. ");
-            if (!password.matches(".*\\d.*")) errors.append("Au moins un chiffre requis. ");
-            if (!password.matches(".*[^A-Za-z0-9].*")) errors.append("Au moins un caractère spécial requis. ");
-        }
-        if (!errors.isEmpty()) throw new IllegalArgumentException(errors.toString().trim());
     }
 }
