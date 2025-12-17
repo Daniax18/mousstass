@@ -56,7 +56,6 @@ public class SignatureLogService {
     public void saveFile(File fileToSave)
             throws IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException{
         try {
-            savePhysicalFile(fileToSave);
             User currentUser = SessionManager.getCurrentUser();
 
             // Get the private key
@@ -65,12 +64,13 @@ public class SignatureLogService {
             // Hash file
             byte[] hash = CryptoUtils.sha256(fileToSave);
 
-            // sign the file
+            // signer the file
             byte[] signature = CryptoUtils.signSha256WithRsa(
                     Files.readAllBytes(fileToSave.toPath()),
                     sk
             );
 
+            savePhysicalFile(fileToSave);
             SignatureLog signatureLog = new SignatureLog(
                     currentUser.getId(),
                     fileToSave.getName(),

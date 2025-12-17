@@ -7,6 +7,8 @@ import com.moustass.model.ActivityLog;
 import com.moustass.repository.UserRepository;
 import com.moustass.repository.ActivityLogRepository;
 import com.moustass.utils.CryptoUtils;
+import com.moustass.utils.ValidatorUtils;
+
 import java.security.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -35,7 +37,7 @@ public class CreateAccountService {
             }
 
             // validate password rules
-            validatePasswordRules(password);
+            ValidatorUtils.validatePasswordRules(password);
 
             // generate salt
             String salt = CryptoUtils.generateSalt(16);
@@ -79,30 +81,5 @@ public class CreateAccountService {
         }catch (SQLException ex){
             throw new DatabaseConnectionException("Error DB : " + ex.getMessage());
         }
-    }
-
-    public void validatePasswordRules(String password) throws IllegalArgumentException{
-        StringBuilder errors = new StringBuilder();
-        if (password == null) {
-            errors.append("Password required. ");
-        } else {
-            boolean hasUpper = false;
-            boolean hasLower = false;
-            boolean hasDigit = false;
-            boolean hasSpecial = false;
-
-            for (char c : password.toCharArray()) {
-                if (Character.isUpperCase(c)) hasUpper = true;
-                else if (Character.isLowerCase(c)) hasLower = true;
-                else if (Character.isDigit(c)) hasDigit = true;
-                else hasSpecial = true;
-            }
-
-            if (!hasUpper) errors.append("Au moins une majuscule requise. ");
-            if (!hasLower) errors.append("Au moins une minuscule requise. ");
-            if (!hasDigit) errors.append("Au moins un chiffre requis. ");
-            if (!hasSpecial) errors.append("Au moins un caractère spécial requis. ");
-        }
-        if (!errors.isEmpty()) throw new IllegalArgumentException(errors.toString().trim());
     }
 }

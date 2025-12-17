@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class MainController {
     @FXML
@@ -42,7 +41,6 @@ public class MainController {
             }else{
                 SessionManager.login(u);
             }
-            SessionManager.login(u);
 
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
