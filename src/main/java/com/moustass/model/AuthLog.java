@@ -2,6 +2,15 @@ package com.moustass.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents an authentication log entry.
+ * <p>
+ * This class is used to record authentication attempts in order to
+ * ensure security monitoring, traceability, and auditability of
+ * user access within the application.
+ * </p>
+ */
+
 public class AuthLog {
     private Integer id;
     private Integer userId;
@@ -11,6 +20,16 @@ public class AuthLog {
 
     public AuthLog() {
     }
+
+    /**
+     * Creates a new authentication log entry.
+     *
+     * @param id         the identifier of the authentication log entry
+     * @param userId     the identifier of the user involved in the authentication
+     * @param event      the authentication event outcome
+     * @param ipAddress  the IP address of the authentication request
+     * @param createdAt  the date and time of the authentication event
+     */
 
     public AuthLog(Integer id, Integer userId, AuthEvent event, String ipAddress, LocalDateTime createdAt) {
         this.id = id;

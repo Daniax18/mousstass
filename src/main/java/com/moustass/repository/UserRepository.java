@@ -8,9 +8,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository responsible for managing {@link User} persistence.
+ * <p>
+ * This class provides database access operations related to user accounts,
+ * including creation, retrieval, deletion, and credential updates.
+ * </p>
+ */
 public class UserRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
+    /**
+     * Retrieves a user by its identifier.
+     *
+     * @param id the identifier of the user
+     * @return the corresponding {@link User}, or {@code null} if not found
+     */
     public User findById(int id) {
         String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -24,6 +37,11 @@ public class UserRepository {
         return null;
     }
 
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return a list of all {@link User} records
+     */
     public List<User> findAll() {
         String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users";
         List<User> list = new ArrayList<>();
@@ -35,6 +53,12 @@ public class UserRepository {
         return list;
     }
 
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param u the user to persist
+     * @return {@code true} if the insertion was successful, {@code false} otherwise
+     */
     public boolean insert(User u) {
         String sql = "INSERT INTO users (firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -57,6 +81,12 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Deletes a user by its identifier.
+     *
+     * @param id the identifier of the user to delete
+     * @return {@code true} if the deletion was successful, {@code false} otherwise
+     */
     public boolean deleteById(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -67,6 +97,12 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Retrieves a user by its username.
+     *
+     * @param username the unique username of the user
+     * @return the corresponding {@link User}, or {@code null} if not found
+     */
     public User findByUsername(String username) {
         String sql = "SELECT id, firstname, lastname, username, password_hash, salt, pk_public, sk_private, must_change_pwd, is_admin, created_at FROM users WHERE username = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -80,6 +116,13 @@ public class UserRepository {
         return null;
     }
 
+    /**
+     * Maps a database result set row to a {@link User} object.
+     *
+     * @param rs the {@link ResultSet} positioned at the current row
+     * @return the mapped {@link User} instance
+     * @throws SQLException if a result set access error occurs
+     */
     private User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getInt("id"));
@@ -99,6 +142,16 @@ public class UserRepository {
         return u;
     }
 
+    /**
+     * Updates the password credentials of a user.
+     * <p>
+     * This method is typically used during password change.
+     * </p>
+     *
+     * @param u the user containing the updated password information
+     * @return {@code true} if the update was successful, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     public boolean updatePassword(User u) throws SQLException{
         if (u == null || u.getId() == null) {
             throw new IllegalArgumentException("User and user id required");

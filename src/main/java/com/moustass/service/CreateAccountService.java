@@ -13,10 +13,32 @@ import java.security.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * Service responsible for user account creation.
+ * <p>
+ * This class contains the business logic required to create new user
+ * accounts, including validation, security processing, and activity logging.
+ * </p>
+ */
 public class CreateAccountService {
     private final UserRepository userRepository = new UserRepository();
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
 
+    /**
+     * Creates a new user account.
+     *
+     * @param firstname         the first name of the user
+     * @param lastname          the last name of the user
+     * @param username          the unique username
+     * @param password          the user password
+     * @param confirmPassword   the password confirmation
+     * @param performedByUserId the identifier of the user performing the action
+     * @param adminVerified     indicates whether administrative verification
+     *                          has been explicitly confirmed
+     * @return the newly created {@link User}
+     * @throws IllegalArgumentException   if validation fails or input data is invalid
+     * @throws NoSuchAlgorithmException   if a cryptographic algorithm is unavailable
+     */
     public User createAccount(String firstname, String lastname, String username, String password, String confirmPassword, Integer performedByUserId, boolean adminVerified)
             throws IllegalArgumentException, NoSuchAlgorithmException{
         if (firstname == null) firstname = "";

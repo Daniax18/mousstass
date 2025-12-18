@@ -15,11 +15,32 @@ import com.moustass.utils.ValidatorUtils;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
+/**
+ * Service responsible for user authentication and password management.
+ * <p>
+ * This class handles login operations, authentication validation,
+ * password updates on first login, and records related security
+ * and activity logs.
+ * </p>
+ */
 public class LoginService {
     private final UserRepository userRepository = new UserRepository();
     private final ActivityLogRepository activityLogRepository = new ActivityLogRepository();
     private final AuthLogRepository authLogRepository = new AuthLogRepository();
 
+    /**
+     * Authenticates a user using their credentials.
+     * <p>
+     * This method validates the provided username and password,
+     * records authentication success or failure, and logs the
+     * corresponding user activity.
+     * </p>
+     *
+     * @param username the username provided for authentication
+     * @param password the password provided for authentication
+     * @return the authenticated {@link User} if credentials are valid
+     * @throws IllegalArgumentException if authentication fails
+     */
     public User authenticate(String username, String password) {
         try {
             User u = userRepository.findByUsername(username);
@@ -58,6 +79,16 @@ public class LoginService {
         }
     }
 
+    /**
+     * Updates the user's password during the first login process.
+     * <p>
+     * This method enforces password change when the user is required
+     * to update credentials upon initial authentication.
+     * </p>
+     *
+     * @param userId      the identifier of the user
+     * @param newPassword the new password to be set
+     */
     public void changePasswordFirstLogin(Integer userId, String newPassword) {
         if (userId == null) {
             throw new IllegalArgumentException("User id is required");

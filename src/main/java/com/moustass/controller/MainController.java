@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * JavaFX controller responsible for main login.
+ */
 public class MainController {
     @FXML
     private TextField userName;

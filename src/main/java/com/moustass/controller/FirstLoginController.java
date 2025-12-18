@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * JavaFX controller responsible for user first login.
+ */
 public class FirstLoginController {
     @FXML
     private PasswordField newPassword;
