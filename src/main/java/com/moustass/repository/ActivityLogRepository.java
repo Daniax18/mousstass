@@ -8,9 +8,24 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository responsible for managing {@link ActivityLog} persistence.
+ * <p>
+ * This class provides database access methods for retrieving and storing
+ * activity log records related to user actions.
+ * </p>
+ */
+
 public class ActivityLogRepository {
     private final DatabaseConfig dbConfig = new DatabaseConfig();
 
+    /**
+     * Retrieves an activity log entry by its identifier.
+     *
+     * @param id the identifier of the activity log
+     * @return the corresponding {@link ActivityLog}, or {@code null} if not found
+     * @throws SQLException if a database access error occurs
+     */
     public ActivityLog findById(int id) throws SQLException {
         String sql = "SELECT id, user_id, action, details, created_at FROM activity_logs WHERE id = ?";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -24,6 +39,13 @@ public class ActivityLogRepository {
         return null;
     }
 
+    /**
+     * Retrieves all activity log entries associated with a given user.
+     *
+     * @param userId the identifier of the user
+     * @return a list of {@link ActivityLog} entries for the specified user
+     * @throws SQLException if a database access error occurs
+     */
     public List<ActivityLog> findAllByUserId(int userId) throws SQLException {
         String sql = "SELECT id, user_id, action, details, created_at FROM activity_logs WHERE user_id = ?";
         List<ActivityLog> list = new ArrayList<>();
@@ -38,6 +60,13 @@ public class ActivityLogRepository {
         return list;
     }
 
+    /**
+     * Inserts a new activity log entry into the database.
+     *
+     * @param a the activity log to persist
+     * @return {@code true} if the insertion was successful, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     public boolean insert(ActivityLog a) throws SQLException {
         String sql = "INSERT INTO activity_logs (user_id, action, details) VALUES (?,?,?)";
         try (Connection conn = dbConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -52,6 +81,13 @@ public class ActivityLogRepository {
         }
     }
 
+    /**
+     * Maps a database result set row to an {@link ActivityLog} object.
+     *
+     * @param rs the {@link ResultSet} positioned at the current row
+     * @return the mapped {@link ActivityLog} instance
+     * @throws SQLException if a result set access error occurs
+     */
     private ActivityLog mapRow(ResultSet rs) throws SQLException {
         ActivityLog a = new ActivityLog();
         a.setId(rs.getInt("id"));

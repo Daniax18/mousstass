@@ -2,12 +2,27 @@ package com.moustass.view;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a read-only view of all file signed.
+ * <p>
+ * This class is used to expose signature-related information for display
+ * or reporting purposes, without exposing sensitive cryptographic data.
+ * </p>
+ */
 public class SignatureView {
     private Integer idSignature;
     private String userName;
     private String fileName;
     private LocalDateTime dateSignature;
 
+    /**
+     * Creates a new signature view instance.
+     *
+     * @param idSignature  the identifier of the signature
+     * @param userName     the username of the signer
+     * @param fileName     the name of the signed file
+     * @param dateSignature the date and time of the signature
+     */
     public SignatureView(Integer idSignature, String userName, String fileName, LocalDateTime dateSignature) {
         this.idSignature = idSignature;
         this.userName = userName;
