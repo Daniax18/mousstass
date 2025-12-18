@@ -35,7 +35,7 @@ public class CreateAccountServiceTest {
         setPrivateField(svc, "userRepository", mockUserRepo);
         setPrivateField(svc, "activityLogRepository", mockActRepo);
 
-        User u = svc.createAccount("John","Doe","jdoe","pass123","pass123", null, false);
+        User u = svc.createAccount("John","Doe","jdoe","StrongPwd!123","StrongPwd!123", null, false);
 
         Assertions.assertNotNull(u);
         Assertions.assertEquals(42, u.getId());
@@ -54,7 +54,7 @@ public class CreateAccountServiceTest {
         setPrivateField(svc, "activityLogRepository", mockActRepo);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                svc.createAccount("John","Doe","jdoe","pass123","pass123", null, false)
+                svc.createAccount("John","Doe","jdoe","StrongPwd!123","StrongPwd!123", null, false)
         );
     }
 
@@ -73,7 +73,7 @@ public class CreateAccountServiceTest {
         setPrivateField(svc, "activityLogRepository", mockActRepo);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                svc.createAccount("John","Doe","jdoe","pass123","pass123", 1, false)
+                svc.createAccount("John","Doe","jdoe","StrongPwd!123","StrongPwd!123", 1, false)
         );
     }
 
@@ -96,7 +96,7 @@ public class CreateAccountServiceTest {
     public void createAccount_missingUsername_throws() throws Exception {
         CreateAccountService svc = new CreateAccountService();
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                svc.createAccount("John","Doe",null,"pass1","pass1", null, false)
+                svc.createAccount("John","Doe",null,"StrongPwd!123","StrongPwd!123", null, false)
         );
     }
 }
