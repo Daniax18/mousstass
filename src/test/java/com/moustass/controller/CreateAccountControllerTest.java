@@ -2,11 +2,13 @@ package com.moustass.controller;
 
 import com.moustass.model.User;
 import com.moustass.service.CreateAccountService;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
@@ -22,21 +24,29 @@ public class CreateAccountControllerTest {
         f.set(target, value);
     }
 
+    @BeforeAll
+    public static void initToolkit() {
+        try {
+            Platform.startup(() -> {});
+        } catch (IllegalStateException ignored) { }
+    }
+
     @Test
     public void onCreate_callsService_and_showsInfo() throws Exception {
         CreateAccountController ctrl = new CreateAccountController();
 
-        TextField tfFirst = Mockito.mock(TextField.class);
-        TextField tfLast = Mockito.mock(TextField.class);
-        TextField tfUser = Mockito.mock(TextField.class);
-        PasswordField pf = Mockito.mock(PasswordField.class);
-        PasswordField pf2 = Mockito.mock(PasswordField.class);
+        // utilisez de vrais contrôles JavaFX au lieu de mocks
+        TextField tfFirst = new TextField();
+        TextField tfLast = new TextField();
+        TextField tfUser = new TextField();
+        PasswordField pf = new PasswordField();
+        PasswordField pf2 = new PasswordField();
 
-        Mockito.when(tfFirst.getText()).thenReturn("John");
-        Mockito.when(tfLast.getText()).thenReturn("Doe");
-        Mockito.when(tfUser.getText()).thenReturn("jdoe");
-        Mockito.when(pf.getText()).thenReturn("pass123");
-        Mockito.when(pf2.getText()).thenReturn("pass123");
+        tfFirst.setText("John");
+        tfLast.setText("Doe");
+        tfUser.setText("jdoe");
+        pf.setText("StrongPwd!123");
+        pf2.setText("StrongPwd!123");
 
         setPrivateField(ctrl, "firstname", tfFirst);
         setPrivateField(ctrl, "lastname", tfLast);
@@ -44,12 +54,14 @@ public class CreateAccountControllerTest {
         setPrivateField(ctrl, "password", pf);
         setPrivateField(ctrl, "confirmPassword", pf2);
 
-        CreateAccountService mockSvc = Mockito.mock(CreateAccountService.class);
         User u = new User();
         u.setId(7);
         u.setUsername("jdoe");
-        Mockito.when(mockSvc.createAccount(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.anyBoolean())).thenReturn(u);
 
+        // injecter un mock de service au lieu d'attendre une construction
+        CreateAccountService mockSvc = Mockito.mock(CreateAccountService.class);
+        Mockito.when(mockSvc.createAccount(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.anyBoolean()))
+               .thenReturn(u);
         setPrivateField(ctrl, "service", mockSvc);
 
         try (MockedConstruction<Alert> mocked = Mockito.mockConstruction(Alert.class, (mock, ctx) -> {
@@ -58,6 +70,7 @@ public class CreateAccountControllerTest {
             Assertions.assertDoesNotThrow(() -> ctrl.onCreate());
         }
 
+        // vérifier que le mock a été appelé
         Mockito.verify(mockSvc).createAccount(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.anyBoolean());
     }
 }
