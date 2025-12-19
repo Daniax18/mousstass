@@ -40,6 +40,26 @@ class SignatureLogTest {
                 () -> assertEquals(now, log.getCreatedAt())
         );
     }
+    @Test
+    void setters_shouldUpdateValues() {
+        LocalDateTime now = LocalDateTime.now();
+        SignatureLog log = new SignatureLog();
 
+        log.setId(10);
+        log.setUserId(2);
+        log.setFileName("signed.txt");
+        log.setFileHash("hashXYZ");
+        log.setSignatureValue("signature123");
+        log.setCreatedAt(now);
+
+        assertAll(
+                () -> assertEquals(10, log.getId()),
+                () -> assertEquals(2, log.getUserId()),
+                () -> assertEquals("signed.txt", log.getFileName()),
+                () -> assertEquals("hashXYZ", log.getFileHash()),
+                () -> assertEquals("signature123", log.getSignatureValue()),
+                () -> assertEquals(now, log.getCreatedAt())
+        );
+    }
 
 }
