@@ -1,7 +1,6 @@
 package com.moustass.session;
 
 import com.moustass.model.User;
-import com.moustass.repository.UserRepository;
 
 /**
  * Manages the current user session.
