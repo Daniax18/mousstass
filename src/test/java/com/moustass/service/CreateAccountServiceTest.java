@@ -8,17 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
-public class CreateAccountServiceTest {
+class CreateAccountServiceTest {
 
-    private static void setPrivateField(Object target, String fieldName, Object value) throws Exception {
+    private static void setPrivateField(Object target, String fieldName, Object value) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Field f = target.getClass().getDeclaredField(fieldName);
         f.setAccessible(true);
         f.set(target, value);
     }
 
     @Test
-    public void createAccount_success() throws Exception {
+    void createAccount_success()
+            throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException, SQLException, NoSuchAlgorithmException {
         CreateAccountService svc = new CreateAccountService();
 
         UserRepository mockUserRepo = Mockito.mock(UserRepository.class);
@@ -44,7 +47,7 @@ public class CreateAccountServiceTest {
     }
 
     @Test
-    public void createAccount_usernameExists_throws() throws Exception {
+    void createAccount_usernameExists_throws() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         CreateAccountService svc = new CreateAccountService();
         UserRepository mockUserRepo = Mockito.mock(UserRepository.class);
         ActivityLogRepository mockActRepo = Mockito.mock(ActivityLogRepository.class);
@@ -59,7 +62,7 @@ public class CreateAccountServiceTest {
     }
 
     @Test
-    public void createAccount_adminDoubleVerification_required() throws Exception {
+    void createAccount_adminDoubleVerification_required() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         CreateAccountService svc = new CreateAccountService();
         UserRepository mockUserRepo = Mockito.mock(UserRepository.class);
         ActivityLogRepository mockActRepo = Mockito.mock(ActivityLogRepository.class);
@@ -78,7 +81,7 @@ public class CreateAccountServiceTest {
     }
 
     @Test
-    public void createAccount_passwordMismatch_throws() throws Exception {
+    void createAccount_passwordMismatch_throws() throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         CreateAccountService svc = new CreateAccountService();
         UserRepository mockUserRepo = Mockito.mock(UserRepository.class);
         ActivityLogRepository mockActRepo = Mockito.mock(ActivityLogRepository.class);
@@ -93,7 +96,7 @@ public class CreateAccountServiceTest {
     }
 
     @Test
-    public void createAccount_missingUsername_throws() throws Exception {
+    void createAccount_missingUsername_throws() throws IllegalArgumentException {
         CreateAccountService svc = new CreateAccountService();
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 svc.createAccount("John","Doe",null,"StrongPwd!123","StrongPwd!123", null, false)
