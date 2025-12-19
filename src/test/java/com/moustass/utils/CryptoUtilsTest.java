@@ -24,10 +24,10 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public class CryptoUtilsTest {
+class CryptoUtilsTest {
 
     @Test
-    public void b64_and_fromB64_roundtrip() {
+    void b64_and_fromB64_roundtrip() {
         byte[] data = new byte[]{1,2,3,4,5};
         String s = CryptoUtils.b64(data);
         byte[] out = CryptoUtils.fromB64(s);
@@ -35,14 +35,14 @@ public class CryptoUtilsTest {
     }
 
     @Test
-    public void sha256Hex_nonEmpty() throws Exception {
+    void sha256Hex_nonEmpty() throws Exception {
         String h = CryptoUtils.sha256Hex("hello");
         Assertions.assertNotNull(h);
-        Assertions.assertTrue(h.length() > 0);
+        Assertions.assertFalse(h.isEmpty());
     }
 
     @Test
-    public void generateSalt_lengthDifferent() {
+    void generateSalt_lengthDifferent() {
         String s1 = CryptoUtils.generateSalt(8);
         String s2 = CryptoUtils.generateSalt(8);
         Assertions.assertNotNull(s1);
@@ -50,7 +50,7 @@ public class CryptoUtilsTest {
     }
 
     @Test
-    public void keyEncodeDecode_and_sign_verify() throws Exception {
+    void keyEncodeDecode_and_sign_verify() throws Exception {
         KeyPair kp = CryptoUtils.generateKeyPair();
         PublicKey pub = kp.getPublic();
         PrivateKey priv = kp.getPrivate();
@@ -68,7 +68,7 @@ public class CryptoUtilsTest {
     }
 
     @Test
-    public void hashPassword_consistent() {
+    void hashPassword_consistent() {
         String h1 = CryptoUtils.hashPassword("s","p","pk","sk");
         String h2 = CryptoUtils.hashPassword("s","p","pk","sk");
         Assertions.assertEquals(h1, h2);

@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -14,7 +16,8 @@ class UserRepositoryTest {
 
 
     @Test
-    void mapRow_mapsAllFields() throws Exception {
+    void mapRow_mapsAllFields()
+            throws SQLException, NoSuchMethodException, SecurityException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
         UserRepository repo = new UserRepository();
         ResultSet rs = Mockito.mock(ResultSet.class);
 
