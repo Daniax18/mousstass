@@ -1,6 +1,5 @@
 package com.moustass.config;
 
-import com.moustass.exception.FileStorageException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

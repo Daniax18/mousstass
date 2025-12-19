@@ -10,10 +10,11 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class UserRepositoryTest {
+class UserRepositoryTest {
+
 
     @Test
-    public void mapRow_mapsAllFields() throws Exception {
+    void mapRow_mapsAllFields() throws Exception {
         UserRepository repo = new UserRepository();
         ResultSet rs = Mockito.mock(ResultSet.class);
 
